@@ -16,7 +16,7 @@ const Content: React.FC = () => {
 
   return (
     <div>
-      {data && data.map((user: any) => ( // Replace `any` with the appropriate type if known
+      {data && data.map((user: any) => ( 
         <div key={user.id}>
           <h3>{user.name}</h3>
           <p>{user.email}</p>
