@@ -6,14 +6,16 @@ interface UserState {
   isLoading: boolean;
   data: any; // Replace with more specific type if known
   error: boolean;
-  postLoading: boolean
+  postLoading: boolean;
+  delLoading: boolean;
 }
 
 const initialState: UserState = {
   isLoading: false,
   data: null,
   error: false,
-  postLoading: false
+  postLoading: false,
+  delLoading: false
 
 };
 
@@ -29,7 +31,14 @@ const info: Info = {
   userId: 1
 
 }
+interface DelInfo {
+  id: number
 
+}
+
+const delInfo: DelInfo = {
+  id: 1
+}
 
 export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
   const response = await axios.get('https://jsonplaceholder.typicode.com/users');
@@ -38,6 +47,11 @@ export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
 
 export const postUser = createAsyncThunk('user/postUser', async () => {
   const response = await axios.post('https://jsonplaceholder.typicode.com/users', info);
+  return response.data
+})
+
+export const delUser = createAsyncThunk('user/delUser', async () => {
+  const response = await axios.delete(`https://jsonplaceholder.typicode.com/users/${delInfo.id}`);
   return response.data
 })
 
@@ -77,6 +91,28 @@ const userSlice = createSlice({
    builder.addCase(postUser.rejected, (state, action) => {
     console.log('Post User rejected', action.error);  
     state.postLoading = false;
+      state.error = true;
+    });
+
+    //code to delete data from the api
+
+    builder.addCase(delUser.pending, (state) => {
+      console.log('Delete User pending');
+      state.delLoading = true;
+    })
+    builder.addCase(delUser.fulfilled, (state, action) => {
+      console.log('Delete User fulfilled', action.payload);
+      state.delLoading = false;
+      if (state.data) {
+        state.data = state.data.filter((user: any) => {user.id !== delInfo.id});
+        console.log(state.data)
+       
+      }
+      
+    })  
+    builder.addCase(delUser.rejected, (state, action) => {
+      console.log('Delete User rejected', action.error);
+      state.delLoading = false;
       state.error = true;
     });
   }
