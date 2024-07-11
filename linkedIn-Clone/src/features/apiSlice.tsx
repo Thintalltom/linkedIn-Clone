@@ -62,9 +62,11 @@ const userSlice = createSlice({
 
     // code for the postUser 
     builder.addCase(postUser.pending, (state) => {
+      console.log('Post User pending'); 
       state.postLoading = true;
     })
     builder.addCase(postUser.fulfilled, (state, action) => {
+      console.log('Post User fulfilled', action.payload);
       state.postLoading = false;
       if (state.data) {
         state.data = [...state.data, action.payload];
@@ -72,8 +74,9 @@ const userSlice = createSlice({
         state.data = [action.payload];
       }
     })
-   builder.addCase(postUser.rejected, (state) => {
-      state.postLoading = false;
+   builder.addCase(postUser.rejected, (state, action) => {
+    console.log('Post User rejected', action.error);  
+    state.postLoading = false;
       state.error = true;
     });
   }

@@ -2,27 +2,31 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from './features/apiSlice';
 import { RootState } from './store'; // Adjust the import according to your store file location
-
+import { postUser } from './features/apiSlice';
 const Content: React.FC = () => {
   const dispatch = useDispatch();
-  const { isLoading, data, error } = useSelector((state: RootState) => state.user);
+  const { isLoading, data, error, postLoading } = useSelector((state: RootState) => state.user);
 
-  useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
 
-  if (isLoading) return <div>Loading...</div>;
+  const handlePostUser = () => {
+    dispatch(postUser());
+  };
+  
+
+
+  if (postLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
   return (
     <div>
-      {data && data.map((user: any) => ( 
-        <div key={user.id}>
-          <h3>{user.name}</h3>
-          <p>{user.email}</p>
+    <button onClick={handlePostUser}>Post User</button>
+    {data && data.map((user: any, index: any) => (
+        <div key={index}>
+          <h3>{user.title}</h3>
+          <p>{user.body}</p>
         </div>
       ))}
-    </div>
+  </div>
   );
 };
 

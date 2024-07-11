@@ -3,7 +3,7 @@ import userReducer from "./features/apiSlice";
 export const store = configureStore(
   {
     reducer: {
-      user: userReducer
+      user: userReducer // this mustbe exported this way from the apiSlice 
     }
   }
 )
